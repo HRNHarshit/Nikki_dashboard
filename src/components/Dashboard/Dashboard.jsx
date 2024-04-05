@@ -51,10 +51,6 @@ const Dashboard = () => {
     setDisplayPage(false);
   };
 
-  const addCustomerHandler = () => {
-    data
-  };
-
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const toggleAddCustomer = () => setShowAddCustomer(!showAddCustomer);
 
@@ -103,7 +99,14 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div>{showAddCustomer && <AddCustomer setShowAddCustomer={setShowAddCustomer} showAddCustomer={showAddCustomer} addCustomerHandler={addCustomerHandler} />}</div>
+      {showAddCustomer && (
+        <div className="addCustomerContainer">
+          <div className="closeIcon" onClick={toggleAddCustomer}>
+            <RxCross2 />
+          </div>
+          <AddCustomer />
+        </div>
+      )}
     </>
   );
 };

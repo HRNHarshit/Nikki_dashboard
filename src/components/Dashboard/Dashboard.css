@@ -79,3 +79,13 @@
 button {
   cursor: pointer;
 }
+
+.addCustomerContainer {
+  position: relative;
+}
+
+.closeIcon {
+  position: absolute;
+  z-index: 50;
+  left: -50px;
+}

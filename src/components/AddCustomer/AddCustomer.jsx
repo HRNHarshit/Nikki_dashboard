@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-// CSS
+import React, { useState, useEffect } from "react";
 import "./AddCustomer.css";
-// Data
 import data from "../../data.json";
+import { IoAdd } from "react-icons/io5";
 
-const AddCustomer = ({ addCustomerHandler }) => {
+const AddCustomer = () => {
+  const addCustomerHandler = () => {
+    const updatedData = [...jsonData, formData];
+    console.log(updatedData);
+  };
+
   const [formData, setFormData] = useState({
     tracking_id: "",
     product_img: "",
@@ -12,32 +16,31 @@ const AddCustomer = ({ addCustomerHandler }) => {
     customer: "",
     date: "",
     amount: "",
-    payment_mode: "",
-    status: "",
+    payment_mode: "Cash on Delivery",
+    status: "Canceled",
   });
 
-  const handleChange = (e) => {
+  const { tracking_id, product_img, product_name, customer, date, amount, payment_mode, status } = formData;
+
+  const productOptions = data.map((item) => item.product_name);
+  const uniqueProducts = [...new Set(productOptions)];
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newData = { ...formData };
-    newData.tracking_id = `#${Date.now()}`;
-    addCustomerHandler(newData);
+    addCustomerHandler(formData);
     setFormData({
       tracking_id: "",
-      product_img: "",
       product_name: "",
       customer: "",
       date: "",
       amount: "",
-      payment_mode: "",
-      status: "",
+      payment_mode: "Cash on Delivery",
+      status: "Canceled",
     });
   };
 
@@ -45,31 +48,56 @@ const AddCustomer = ({ addCustomerHandler }) => {
     <div className="AddCustomer">
       <h1>Add Customer</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="product">
-          Select Product
-          <input id="product" type="text" name="product_name" value={formData.product_name} onChange={handleChange} />
-        </label>
-        <label>
-          Customer Name:
-          <input type="text" name="customer" value={formData.customer} onChange={handleChange} />
-        </label>
-        <label>
-          Date:
-          <input type="text" name="date" value={formData.date} onChange={handleChange} />
-        </label>
-        <label>
-          Amount:
-          <input type="text" name="amount" value={formData.amount} onChange={handleChange} />
-        </label>
-        <label>
-          Payment Mode:
-          <input type="text" name="payment_mode" value={formData.payment_mode} onChange={handleChange} />
-        </label>
-        <label>
-          Status:
-          <input type="text" name="status" value={formData.status} onChange={handleChange} />
-        </label>
-        <button type="submit">Add</button>
+        <div>
+          <label htmlFor="product_name">Select Product</label>
+          <select id="product_name" name="product_name" value={product_name} onChange={handleInputChange}>
+            <option value="">Select Product</option>
+            {uniqueProducts.map((product, index) => (
+              <option key={index} value={product}>
+                {product}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="customer">Customer Name</label>
+          <input type="text" id="customer" name="customer" value={customer} onChange={handleInputChange} required placeholder="Enter Customer Name" />
+        </div>
+
+        <div>
+          <label htmlFor="date">Date</label>
+          <input type="date" id="date" name="date" value={date} onChange={handleInputChange} required />
+        </div>
+
+        <div>
+          <label htmlFor="amount">Amount</label>
+          <div className="amount-input">
+            <span>$</span>
+            <input type="text" id="amount" name="amount" value={amount} onChange={handleInputChange} required />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="payment_mode">Payment Mode</label>
+          <select id="payment_mode" name="payment_mode" value={payment_mode} onChange={handleInputChange}>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="Transfer Bank">Transfer Bank</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="status">Status</label>
+          <select id="status" name="status" value={status} onChange={handleInputChange}>
+            <option value="Delivered">Delivered</option>
+            <option value="Process">Process</option>
+            <option value="Canceled">Canceled</option>
+          </select>
+        </div>
+
+        <button type="submit">
+          <IoAdd size={20} /> Add
+        </button>
       </form>
     </div>
   );
